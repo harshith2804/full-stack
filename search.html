@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Donor</title>
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #ff6b6b;
+        }
+        .navbar-brand {
+            color: #fff !important;
+        }
+        h2 {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+        .btn-primary:hover {
+            background-color: #e63946;
+            border-color: #e63946;
+        }
+        .card {
+            border: none;
+            margin-top: 20px;
+        }
+        .card-body {
+            background-color: #fff3f3;
+            border-radius: 10px;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #ff6b6b;
+            color: white;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="index.html">Blood Donation</a>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center mb-4">Search for Blood Donor</h2>
+                <div class="form-container">
+                    <form id="searchForm" action="javascript:void(0);" method="POST">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="searchBloodGroup">Blood Group:</label>
+                                <input type="text" class="form-control" id="searchBloodGroup" placeholder="Enter blood group" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="searchLocation">Location:</label>
+                                <input type="text" class="form-control" id="searchLocation" placeholder="Enter location" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Search</button>
+                    </form>
+
+                    <div id="searchResults" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#searchForm').submit(function () {
+                let searchBloodGroup = $('#searchBloodGroup').val();
+                let searchLocation = $('#searchLocation').val();
+
+                let donors = JSON.parse(localStorage.getItem("donors")) || [];
+                let results = donors.filter(donor => 
+                    donor.bloodGroup.toLowerCase() === searchBloodGroup.toLowerCase() && 
+                    donor.location.toLowerCase() === searchLocation.toLowerCase()
+                );
+
+                // Show search results
+                if (results.length > 0) {
+                    let resultHTML = '<table class="table table-striped"><thead><tr><th>Name</th><th>Blood Group</th><th>Location</th></tr></thead><tbody>';
+                    results.forEach(donor => {
+                        resultHTML += `<tr><td>${donor.name}</td><td>${donor.bloodGroup}</td><td>${donor.location}</td></tr>`;
+                    });
+                    resultHTML += '</tbody></table>';
+                    $('#searchResults').html(resultHTML);
+                } else {
+                    $('#searchResults').html('<div class="alert alert-danger" role="alert">No donors found matching your search.</div>');
+                }
+            });
+        });
+    </script>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
